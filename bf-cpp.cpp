@@ -8,21 +8,21 @@
 class bf_interpret
 {
 public:
-	bf_interpret(const char *prog)
-	{
-		bf_program = std::string(prog);
-		data_ptr = 0;
-	}
+    bf_interpret(const char *prog)
+    {
+        bf_program = std::string(prog);
+        data_ptr = 0;
+    }
 
-	~bf_interpret() {};
+    ~bf_interpret() {};
 
-	void run()
-	{
-		for (unsigned int cnt = 0; cnt < bf_program.length(); cnt++)
-		{
-			switch (bf_program[cnt])
-			{
-			case '+':
+    void run()
+    {
+        for (unsigned int cnt = 0; cnt < bf_program.length(); cnt++)
+        {
+            switch (bf_program[cnt])
+            {
+            case '+':
                 data_cell[data_ptr]++;
                 break;
             case '-':
@@ -58,19 +58,19 @@ public:
                 data_cell[data_ptr] = getchar();
                 break;
             default:
-				std::cout << "warning: alien instruction (pos " << (cnt + 1) << ")" << std::endl;
-			}
-		}
+                std::cout << "warning: alien instruction (pos " << (cnt + 1) << ")" << std::endl;
+            }
+        }
 
-		if (!stack.empty())
-			std::cout << "error: brackets mismatch (end of the tape)" << std::endl;
-	}
+        if (!stack.empty())
+            std::cout << "error: brackets mismatch (end of the tape)" << std::endl;
+    }
 
 private:
-	std::stack<int> stack;
-	std::map<int, char> data_cell;
-	std::string bf_program;
-	int data_ptr;
+    std::stack<int> stack;
+    std::map<int, char> data_cell;
+    std::string bf_program;
+    int data_ptr;
 };
 
 /*
@@ -80,8 +80,8 @@ private:
 */
 int main(int argc, char **argv)
 {
-	bf_interpret bf(argv[1]);
-	bf.run();
+    bf_interpret bf(argv[1]);
+    bf.run();
 
     return 0;
 }
