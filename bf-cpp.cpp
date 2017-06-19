@@ -7,6 +7,13 @@
 
 class bf_interpret
 {
+
+private:
+    std::stack<int> stack;
+    std::map<int, unsigned char> data_cell;
+    std::string bf_program;
+    int data_ptr;
+
 public:
     bf_interpret(const char *prog)
     {
@@ -35,7 +42,30 @@ public:
                 data_ptr--;
                 break;
             case '[':
-                stack.push(cnt);
+				if (data_cell[data_ptr] == 0)
+				{
+					/* skipping everything that inside false condition loop */
+					for (; cnt < bf_program.length(); cnt++)
+					{
+						unsigned int loop_cnt = 0;
+
+						switch (bf_program[cnt])
+						{
+							case '[':
+								loop_cnt++;
+								break;
+							case ']':
+								if (loop_cnt == 0)
+									break;
+
+								loop_cnt--;
+								break;
+						}
+					}
+					cnt++;
+				}
+				else
+					stack.push(cnt);
                 break;
             case ']':
                 if (data_cell[data_ptr] != 0)
@@ -61,16 +91,7 @@ public:
                 std::cout << "warning: alien instruction (pos " << (cnt + 1) << ")" << std::endl;
             }
         }
-
-        if (!stack.empty())
-            std::cout << "error: brackets mismatch (end of the tape)" << std::endl;
-    }
-
-private:
-    std::stack<int> stack;
-    std::map<int, char> data_cell;
-    std::string bf_program;
-    int data_ptr;
+	}
 };
 
 /*
@@ -80,8 +101,13 @@ private:
 */
 int main(int argc, char **argv)
 {
+	if (!argv[1])
+		argv[1] = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+."
+				  "+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.";
+
     bf_interpret bf(argv[1]);
     bf.run();
 
     return 0;
 }
+
